@@ -1,4 +1,5 @@
 import pyglet
+from entity import Friendly
 
 from player import Player
 from settings import *
@@ -14,6 +15,7 @@ class Level:
 
         self.tiles = SpriteGroup()
         self.collision_tiles = SpriteGroup()
+        self.entities = [] #TODO MAKE SPRITE GROUP FOR ENTITIES
         self.generate_tilemap()
 
     def generate_tilemap(self):
@@ -38,9 +40,19 @@ class Level:
                         tile = Tile(kind, xloc, yloc)
                     assert(tile != None)
                     self.tiles.append(tile)
+
+                elif kind >= 70:
+                    if kind == 71:
+                        entity = Friendly(kind, xloc, yloc)
+                        self.entities.append(entity)
+
         self.player.obstacles = self.collision_tiles
+        self.player.entities = self.entities
+
 
     def draw(self):
         self.backdrop.draw()
         self.tiles.draw()
+        for e in self.entities:
+            e.draw()
 

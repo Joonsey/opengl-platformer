@@ -1,6 +1,9 @@
 import pyglet
 from pyglet.window import key
 
+from entity import Friendly
+from tile import Tile
+
 from sprite_group import SpriteGroup
 from settings import *
 
@@ -21,9 +24,12 @@ class Player:
                                            self.xpos,
                                            self.ypos)
         self.obstacles = obstacles
+        self.entities = []
         self.jumped = False
+        self.interact_radius = 32
 
     def draw(self, keyboard, dt):
+        self.interactable_object = self.get_interactable()
         self.movement_handler(keyboard, dt)
         self.sprite.draw()
 
@@ -70,7 +76,7 @@ class Player:
         if keyboard[key.Q]:
             pyglet.app.exit()
 
-    def collision(self):
+    def collision(self) -> Tile | None:
         for obstacle in self.obstacles:
             sprite = obstacle
             if self.sprite.x < sprite.x + sprite.width and self.sprite.x + self.sprite.width > sprite.x and self.sprite.y < sprite.y + sprite.height and self.sprite.y + self.sprite.height > sprite.y:
@@ -84,4 +90,16 @@ class Player:
                 obstacle._update_color()
                 return obstacle
 
-        return False
+
+    def get_interactable(self) -> Friendly | None:
+        for entity in self.entities:
+            if type(entity) == Friendly:
+                centerx = (entity.x + entity.width) // 2
+                centery = (entity.y + entity.height) // 2
+                _p_centerx = (self.sprite.x + self.sprite.width) // 2
+                _p_centery = (self.sprite.y + self.sprite.height) // 2
+                if abs(_p_centerx - centerx) < self.interact_radius and abs(_p_centery - centery) < self.interact_radius:
+                    entity.interactable = True
+                    return entity
+                else:
+                    entity.interactable = False
