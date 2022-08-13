@@ -25,9 +25,12 @@ values between 0 -> 68 are tiles and static assets
 
 #TODO
 """
-automatically parse map data
-automatically parse spritesheets
-npc's?
-dialoge?
-fix the movement lmao??
+[ ]automatically generate map data
+[ ]automatically parse map data
+[X]automatically parse spritesheets
+[X]npc's?
+[ ]dialoge?
+[ ]particles
+[ ]optimizations
+[ ]fix the movement lmao??
 """
