@@ -3,13 +3,13 @@ from pyglet.window import key
 
 from entity import Friendly
 from tile import Tile
-
-from sprite_group import SpriteGroup
+from button import Button
+from sprite_group import *
 from settings import *
 
 
 class Player:
-    def __init__(self, xpos: int, ypos: int, obstacles: SpriteGroup) -> None:
+    def __init__(self, xpos: int, ypos: int, obstacles: TileGroup) -> None:
         self.xpos = xpos
         self.ypos = ypos
         self.texture = pyglet.image.load('texture.png')
@@ -32,6 +32,8 @@ class Player:
         self.interactable_object = self.get_interactable()
         self.movement_handler(keyboard, dt)
         self.sprite.draw()
+        if self.button != None:
+            self.button.draw()
 
     def movement_handler(self, keyboard, dt) -> None:
 
@@ -58,8 +60,6 @@ class Player:
 
                 self.sprite.x = colliding.x + tile_size
             self.momentum = pyglet.math.Vec2(0, self.momentum.y)
-            # inteded to snap to walls but ends up with more problems than not
-            # FIXED
 
         self.momentum -= 0, self.gravity
 
@@ -75,6 +75,10 @@ class Player:
 
         if keyboard[key.Q]:
             pyglet.app.exit()
+
+
+        if keyboard[key.E] and self.get_interactable():
+            self.interact(self.interactable_object)
 
     def collision(self) -> Tile | None:
         for obstacle in self.obstacles:
@@ -99,7 +103,16 @@ class Player:
                 _p_centerx = (self.sprite.x + self.sprite.width) // 2
                 _p_centery = (self.sprite.y + self.sprite.height) // 2
                 if abs(_p_centerx - centerx) < self.interact_radius and abs(_p_centery - centery) < self.interact_radius:
+                    self.button = Button('e', self.sprite.x, self.sprite.y + tile_size)
                     entity.interactable = True
                     return entity
                 else:
+                    self.button = None
                     entity.interactable = False
+
+    def interact(self, interactable_object: Friendly | None) -> None:
+        if interactable_object == None:
+            pass
+        else:
+            interactable_object.interact()
+

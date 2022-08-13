@@ -4,7 +4,7 @@ from entity import Friendly
 from player import Player
 from settings import *
 from tile import Tile
-from sprite_group import SpriteGroup
+from sprite_group import TileGroup, EntityGroup
 class Level:
     def __init__(self, xdim, ydim,**kwargs) -> None:
         self.xdim = len(map_seed[0])
@@ -13,9 +13,9 @@ class Level:
         self.img = pyglet.image.load('assets/backdrop/backdrop-1.jpg')
         self.backdrop = pyglet.sprite.Sprite(self.img)
 
-        self.tiles = SpriteGroup()
-        self.collision_tiles = SpriteGroup()
-        self.entities = [] #TODO MAKE SPRITE GROUP FOR ENTITIES
+        self.tiles = TileGroup()
+        self.collision_tiles = TileGroup()
+        self.entities = EntityGroup()
         self.generate_tilemap()
 
     def generate_tilemap(self):
@@ -51,8 +51,7 @@ class Level:
 
 
     def draw(self):
-        self.backdrop.draw()
+        #self.backdrop.draw()
         self.tiles.draw()
-        for e in self.entities:
-            e.draw()
+        self.entities.draw()
 

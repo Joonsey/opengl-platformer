@@ -16,8 +16,10 @@ class Friendly(Entity):
         pyglet.image.load('assets/characters/red-hooded-guy-1.png')]
         super().__init__(self.imgs, x, y)
 
-
         self.interactable = False
+
+    def interact(self):
+        pass
 
     def draw(self):
         if self.interactable:

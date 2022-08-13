@@ -7,8 +7,8 @@ class Tile(pyglet.sprite.Sprite):
 
     def __init__(self, kind, x=0, y=0):
         self.ground_images = self.format_path('ground-', (1,4))
-        self.grass_images = self.format_path('grass-', (1,4))
-        self.barrel_images = self.format_path('barrel-', (1,2))
+        self.grass_images = self.format_path('grass-', (0,4))
+        self.barrel_images = self.format_path('barrel-', (0,2))
 
 
         self.img = pyglet.image.load(random.choice(self.ground_images))
