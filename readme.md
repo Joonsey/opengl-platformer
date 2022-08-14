@@ -10,4 +10,4 @@ A [WIP] platformer game made with Pyglet
 The entire game including assets is made by me.
 
 
-(flower)[assets/gifs/flower.gif]
+[flower](assets/gifs/flower.gif)
