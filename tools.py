@@ -29,7 +29,7 @@ def parse_v_tileset(image_path: str) -> None:
             print('image saved as: ' + _file_name)
 
 if __name__ == "__main__":
-    if len(sys.argv) == 1:
+    if not len(sys.argv):
         #img ='assets/characters/main-guy.png'
         raise RuntimeError('please pass a file path as an argument')
     else:
