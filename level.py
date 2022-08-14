@@ -37,7 +37,7 @@ class Level:
                     if kind == 1:
                         tile = Tile(kind, xloc, yloc)
                         self.collision_tiles.append(tile)
-                    elif kind == 2:
+                    else:
                         tile = Tile(kind, xloc, yloc)
                     assert(tile != None)
                     self.tiles.append(tile)

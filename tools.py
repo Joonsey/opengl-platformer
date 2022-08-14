@@ -27,7 +27,6 @@ def parse_v_tileset(image_path: str) -> None:
             print('image saved as: ' + _file_name)
 
 if __name__ == "__main__":
-    img ='assets/tiles/grass.png'
+    img ='assets/characters/main-guy.png'
     parse_h_tileset(img)
-    parse_v_tileset(img)
 

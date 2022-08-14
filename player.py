@@ -13,18 +13,20 @@ class Player:
     def __init__(self, xpos: int, ypos: int, obstacles: TileGroup) -> None:
         self.xpos = xpos
         self.ypos = ypos
-        self.texture = pyglet.image.load('texture.png')
+        self.textures = [pyglet.image.load('assets/characters/main-guy-'+str(x)+'.png') for x in range(0,5)]
+        self.anim = pyglet.image.Animation.from_image_sequence(self.textures, duration=0.2, loop=True)
         self.momentum = pyglet.math.Vec2(0,0)
         self.speed = 320.0
         self.max_speed = self.speed
         self.jumpspeed = 64.0*6
         self.on_ground = True
         self.gravity = 600
+        self.movement_resistance = self.speed*2
 
         self.particle_batch = pyglet.graphics.Batch()
         self.particle_list = []
 
-        self.sprite = pyglet.sprite.Sprite(self.texture,
+        self.sprite = pyglet.sprite.Sprite(self.anim,
                                            self.xpos,
                                            self.ypos)
         self.obstacles = obstacles
@@ -43,6 +45,7 @@ class Player:
                 p.batch = None
                 self.particle_list.remove(p)
                 self.particle_batch.invalidate()
+                del p
         self.particle_batch.draw()
         if self.button != None:
             self.button.draw()
@@ -51,15 +54,15 @@ class Player:
 
         # x movement resistance
         if self.momentum.x > 0:
-            if self.momentum.x < self.speed * dt:
+            if self.momentum.x < self.movement_resistance * dt:
                 self.momentum = pyglet.math.Vec2(0, self.momentum.y)
             else:
-                self.momentum -= self.speed * dt, 0
+                self.momentum -= self.movement_resistance * dt, 0
         elif self.momentum.x < 0:
-            if self.momentum.x > -self.speed * dt:
+            if self.momentum.x > -self.movement_resistance * dt:
                 self.momentum = pyglet.math.Vec2(0, self.momentum.y)
             else:
-                self.momentum += self.speed * dt, 0
+                self.momentum += self.movement_resistance * dt, 0
 
         # handling input
         if keyboard[key.D]:
@@ -122,8 +125,9 @@ class Player:
                 # could make it fade for some cool game mechanic at some point
                 # pyglet.clock something to make a function that redrawst he color with cool fade
                 # TODO fucking with this for fun
-                obstacle.color = (255,0,0)
-                obstacle._update_color()
+                if DEBUG_MODE:
+                    obstacle.color = (255,0,0)
+                    obstacle._update_color()
                 return obstacle
 
 
