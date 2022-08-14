@@ -1,6 +1,7 @@
 import pyglet
 from pyglet.window import key
 
+from particle import Movement_Particle
 from entity import Friendly
 from tile import Tile
 from button import Button
@@ -20,6 +21,9 @@ class Player:
         self.on_ground = True
         self.gravity = 600
 
+        self.particle_batch = pyglet.graphics.Batch()
+        self.particle_list = []
+
         self.sprite = pyglet.sprite.Sprite(self.texture,
                                            self.xpos,
                                            self.ypos)
@@ -27,11 +31,19 @@ class Player:
         self.entities = []
         self.jumped = False
         self.interact_radius = 32
+        self._n = 0
 
     def draw(self, keyboard, dt):
         self.interactable_object = self.get_interactable()
         self.movement_handler(keyboard, dt)
         self.sprite.draw()
+        for p in self.particle_list:
+            p.update(dt)
+            if p.is_dead(dt):
+                p.batch = None
+                self.particle_list.remove(p)
+                self.particle_batch.invalidate()
+        self.particle_batch.draw()
         if self.button != None:
             self.button.draw()
 
@@ -81,6 +93,10 @@ class Player:
         colliding = self.collision()
         if colliding:
             if self.momentum.y <= 0:
+                if self.momentum.x != 0:
+                    if self.can_spawn_particle(dt):
+                        particle = Movement_Particle(self.momentum.x, self.sprite.x, self.sprite.y, batch= self.particle_batch)
+                        self.particle_list.append(particle)
                 self.sprite.y = colliding.y + tile_size
                 self.jumped = False
             else:
@@ -132,3 +148,11 @@ class Player:
         else:
             interactable_object.interact()
 
+
+    def can_spawn_particle(self, dt):
+        self._n += dt * 2
+        if self._n >= 0.1:
+            self._n = 0
+            return True
+        else:
+            return False

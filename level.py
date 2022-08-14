@@ -13,6 +13,7 @@ class Level:
         self.img = pyglet.image.load('assets/backdrop/backdrop-1.jpg')
         self.backdrop = pyglet.sprite.Sprite(self.img)
 
+
         self.tiles = TileGroup()
         self.collision_tiles = TileGroup()
         self.entities = EntityGroup()
