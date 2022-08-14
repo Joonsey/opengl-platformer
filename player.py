@@ -18,7 +18,7 @@ class Player:
         self.max_speed = self.speed
         self.jumpspeed = 64.0*6
         self.on_ground = True
-        self.gravity = 20
+        self.gravity = 600
 
         self.sprite = pyglet.sprite.Sprite(self.texture,
                                            self.xpos,
@@ -37,6 +37,19 @@ class Player:
 
     def movement_handler(self, keyboard, dt) -> None:
 
+        # x movement resistance
+        if self.momentum.x > 0:
+            if self.momentum.x < self.speed * dt:
+                self.momentum = pyglet.math.Vec2(0, self.momentum.y)
+            else:
+                self.momentum -= self.speed * dt, 0
+        elif self.momentum.x < 0:
+            if self.momentum.x > -self.speed * dt:
+                self.momentum = pyglet.math.Vec2(0, self.momentum.y)
+            else:
+                self.momentum += self.speed * dt, 0
+
+        # handling input
         if keyboard[key.D]:
             if self.momentum.x < self.max_speed:
                 self.momentum += int(self.speed * (dt*4)), 0
@@ -49,8 +62,8 @@ class Player:
             self.jumped = True
             self.momentum += 0, self.jumpspeed
 
+        # calculating x movement and checking for collision
         self.sprite.x += self.momentum.x * dt
-
         colliding = self.collision()
         if colliding:
             if self.momentum.x >= 0:
@@ -61,8 +74,9 @@ class Player:
                 self.sprite.x = colliding.x + tile_size
             self.momentum = pyglet.math.Vec2(0, self.momentum.y)
 
-        self.momentum -= 0, self.gravity
 
+        # calculating y movement and checking for collision
+        self.momentum -= 0, self.gravity * dt
         self.sprite.y += self.momentum.y * dt
         colliding = self.collision()
         if colliding:
@@ -73,10 +87,12 @@ class Player:
                 self.sprite.y = colliding.y - tile_size
             self.momentum = pyglet.math.Vec2(self.momentum.x, 0)
 
+        # handle exit game
         if keyboard[key.Q]:
             pyglet.app.exit()
 
 
+        # player interacts with object
         if keyboard[key.E] and self.get_interactable():
             self.interact(self.interactable_object)
 
