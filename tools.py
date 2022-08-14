@@ -1,6 +1,8 @@
+#!/bin/python
 from PIL import Image
 from settings import *
 import os
+import sys
 
 
 def parse_h_tileset(image_path: str) -> None:
@@ -27,6 +29,10 @@ def parse_v_tileset(image_path: str) -> None:
             print('image saved as: ' + _file_name)
 
 if __name__ == "__main__":
-    img ='assets/characters/main-guy.png'
+    if not len(sys.argv):
+        #img ='assets/characters/main-guy.png'
+        raise RuntimeError('please pass a file path as an rgument')
+    else:
+        img = str(sys.argv)
     parse_h_tileset(img)
 
