@@ -10,7 +10,7 @@ A [WIP] platformer game made with Pyglet
 The entire game including assets is made by me.
 
 
-![flower](assets/gifs/flower.gif)
-![ground](assets/gifs/ground.gif)
-![main-guy](assets/gifs/main-guy.gif)
-![red-hooded-guy](assets/gifs/red-hooded-guy.gif)
+![flower](res/assets/gifs/flower.gif)
+![ground](res/assets/gifs/ground.gif)
+![main-guy](res/assets/gifs/main-guy.gif)
+![red-hooded-guy](res/assets/gifs/red-hooded-guy.gif)
