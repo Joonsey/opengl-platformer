@@ -1,22 +1,21 @@
 import pyglet
+from pyglet import resource
 from entity import Friendly
 
 from player import Player
 from settings import *
 from tile import Tile
 from sprite_group import TileGroup, EntityGroup
+
 class Level:
     def __init__(self, xdim, ydim,**kwargs) -> None:
         self.xdim = len(map_seed[0])
         self.ydim = len(map_seed)
 
-        self.img = pyglet.image.load('assets/backdrop/backdrop-1.jpg')
-        self.backdrop = pyglet.sprite.Sprite(self.img)
-
-
-        self.tiles = TileGroup()
+        self.tiles_sprite_batch = pyglet.graphics.Batch()
         self.collision_tiles = TileGroup()
         self.entities = EntityGroup()
+        self.entity_sprite_batch = pyglet.graphics.Batch()
         self.generate_tilemap()
 
     def generate_tilemap(self):
@@ -35,16 +34,15 @@ class Level:
                     self.player = Player(xloc, yloc, obstacles=self.collision_tiles)
                 elif kind > 0 and kind < 69:
                     if kind == 1:
-                        tile = Tile(kind, xloc, yloc)
+                        tile = Tile(kind, xloc, yloc, self.tiles_sprite_batch)
                         self.collision_tiles.append(tile)
                     else:
-                        tile = Tile(kind, xloc, yloc)
+                        tile = Tile(kind, xloc, yloc, self.tiles_sprite_batch)
                     assert(tile != None)
-                    self.tiles.append(tile)
 
                 elif kind >= 70:
                     if kind == 71:
-                        entity = Friendly(kind, xloc, yloc)
+                        entity = Friendly(kind, xloc, yloc, batch=self.entity_sprite_batch)
                         self.entities.append(entity)
 
         self.player.obstacles = self.collision_tiles
@@ -52,7 +50,6 @@ class Level:
 
 
     def draw(self):
-        #self.backdrop.draw()
-        self.tiles.draw()
-        self.entities.draw()
+        self.tiles_sprite_batch.draw()
+        self.entity_sprite_batch.draw()
 

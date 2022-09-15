@@ -1,5 +1,6 @@
 import pyglet
 from pyglet.window import key
+from pyglet import resource
 
 from particle import Movement_Particle
 from entity import Friendly
@@ -13,7 +14,7 @@ class Player:
     def __init__(self, xpos: int, ypos: int, obstacles: TileGroup) -> None:
         self.xpos = xpos
         self.ypos = ypos
-        self.textures = [pyglet.image.load('assets/characters/main-guy-'+str(x)+'.png') for x in range(0,5)]
+        self.textures = [resource.image('assets/characters/main-guy-'+str(x)+'.png') for x in range(1,5)]
         self.anim = pyglet.image.Animation.from_image_sequence(self.textures, duration=0.2, loop=True)
         self.momentum = pyglet.math.Vec2(0,0)
         self.speed = 320.0
@@ -140,10 +141,12 @@ class Player:
                 _p_centery = (self.sprite.y + self.sprite.height) // 2
                 if abs(_p_centerx - centerx) < self.interact_radius and abs(_p_centery - centery) < self.interact_radius:
                     self.button = Button('e', self.sprite.x, self.sprite.y + tile_size)
+                    entity.can_interact()
                     entity.interactable = True
                     return entity
                 else:
                     self.button = None
+                    entity.can_no_longer_interact()
                     entity.interactable = False
 
     def interact(self, interactable_object: Friendly | None) -> None:

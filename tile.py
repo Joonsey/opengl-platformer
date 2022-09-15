@@ -1,30 +1,30 @@
 import pyglet
 import random
-
+from pyglet import resource
 from settings import *
 
 class Tile(pyglet.sprite.Sprite):
 
-    def __init__(self, kind, x=0, y=0):
-        self.ground_images = self.format_path('ground-', (1,6))
+    def __init__(self, kind, x=0, y=0, batch=None):
+        self.ground_images = self.format_path('ground-', (1,5))
         self.grass_images = self.format_path('grass-', (0,4))
         self.barrel_images = self.format_path('barrel-', (1,2))
+        self.ladder_images = self.format_path('ladder-', (0,1))
 
-
-        self.img = pyglet.image.load(random.choice(self.ground_images))
+        self.img = resource.image(random.choice(self.ground_images))
         if kind == 1:
-            self.img = self.select_random_image(self.ground_images)
+            self.img = resource.image(random.choice(self.ground_images))
         elif kind == 2:
-            self.img = self.select_random_image(self.grass_images)
+            self.img = resource.image(random.choice(self.grass_images))
         elif kind == 3:
-            self.img = self.select_random_image(self.barrel_images)
+            self.img = resource.image(random.choice(self.barrel_images))
         elif kind == 4:
-            self.imgs = [pyglet.image.load(x) for x in self.format_path('flower-', (0,9))]
+            self.imgs = [resource.image(x) for x in self.format_path('flower-', (0,9))]
             self.img = pyglet.image.Animation.from_image_sequence(self.imgs, duration=0.5, loop=True)
         elif kind == 5:
-            self.img = pyglet.image.load(self.format_path("ladder-")[0])
+            self.img = resource.image(self.ladder_images[0])
 
-        super().__init__(self.img, x, y)
+        super().__init__(self.img, x, y, batch=batch)
 
     def select_random_image(self, img: list[str]):
         return pyglet.image.load(random.choice(img))
